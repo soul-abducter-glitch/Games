@@ -2,397 +2,236 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Dog &amp; Eggs</title>
+  <title>Dog & Eggs</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background: linear-gradient(135deg, #2a3a4a, #1a2a3a);
-      font-family: Arial, sans-serif;
+      background: #333;
+      font-family: 'Arial', sans-serif;
       display: flex;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      padding: 10px;
+      padding: 20px;
     }
     .console {
-      max-width: 750px;
       width: 100%;
-      background: linear-gradient(160deg, #b0b0b8 0%, #888890 50%, #606068 100%);
-      border-radius: 25px;
-      padding: 15px 20px;
+      max-width: 800px;
+      background: linear-gradient(to bottom, #e0e0e0, #c0c0c0);
+      border-radius: 20px;
+      padding: 25px;
       box-shadow: 
-        0 20px 60px rgba(0,0,0,0.8),
-        inset 0 2px 4px rgba(255,255,255,0.2),
-        inset 0 -3px 6px rgba(0,0,0,0.3);
+        0 20px 50px rgba(0,0,0,0.7),
+        inset 0 2px 4px rgba(255,255,255,0.5),
+        inset 0 -5px 10px rgba(0,0,0,0.5);
+      border: 2px solid #444;
       position: relative;
     }
-    .console::before {
-      content: '';
-      position: absolute;
-      top: 8px;
-      left: 50px;
-      right: 50px;
-      height: 6px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-      border-radius: 3px;
-    }
-    .title {
-      text-align: center;
-      font-size: 20px;
-      font-weight: bold;
-      color: #cc3333;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.4);
-      margin-bottom: 8px;
-      letter-spacing: 3px;
-    }
-    .main-area {
+    .console-inner {
       display: grid;
-      grid-template-columns: 90px 1fr 90px;
-      gap: 12px;
+      grid-template-columns: 100px 1fr 100px;
+      gap: 20px;
       align-items: center;
     }
     .left-controls, .right-controls {
       display: flex;
       flex-direction: column;
-      gap: 20px;
       align-items: center;
+      gap: 30px;
+    }
+    .control-pad {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
     .round-btn {
-      width: 48px;
-      height: 48px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
-      border: 4px solid #2a2a3a;
-      background: radial-gradient(circle at 35% 35%, #7a8a7a, #3a4a3a);
-      cursor: pointer;
-      transition: all 0.1s;
+      background: radial-gradient(circle at 30% 30%, #f0f0f0, #b0b0b0);
+      border: 2px solid #555;
       box-shadow: 
-        0 4px 8px rgba(0,0,0,0.5),
-        inset 0 2px 4px rgba(255,255,255,0.1);
+        0 8px 15px rgba(0,0,0,0.5),
+        inset 0 3px 5px rgba(255,255,255,0.6),
+        inset 0 -4px 8px rgba(0,0,0,0.4);
       position: relative;
+      cursor: pointer;
+      transition: all 0.1s ease;
     }
     .round-btn:active {
-      transform: translateY(3px);
+      transform: translateY(4px);
       box-shadow: 
-        0 1px 3px rgba(0,0,0,0.5),
-        inset 0 1px 2px rgba(0,0,0,0.3);
+        0 4px 8px rgba(0,0,0,0.5),
+        inset 0 2px 4px rgba(0,0,0,0.3);
     }
-    .round-btn::after {
-      content: '';
+    .round-btn-inset {
       position: absolute;
-      top: 8px;
-      left: 8px;
-      width: 15px;
-      height: 15px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.2);
+      background: #ccc;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.4);
+    }
+    .screen-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .header-text {
+      font-size: 24px;
+      font-weight: bold;
+      color: #d00;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+      margin-bottom: 10px;
+      letter-spacing: 2px;
     }
     .screen-container {
-      background: radial-gradient(circle at 40% 40%, #5a7a5a, #2a4a2a);
-      border: 5px solid #1a2a1a;
-      border-radius: 18px;
-      padding: 12px;
-      box-shadow: 
-        inset 0 4px 10px rgba(0,0,0,0.6),
-        0 2px 5px rgba(0,0,0,0.4);
+      width: 100%;
+      background: #4a6a4a;
+      border: 8px solid #3a5a3a;
+      border-radius: 15px;
+      padding: 15px;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
     }
     canvas {
       width: 100%;
       height: auto;
       background: #c8d4b8;
-      border: 3px solid #2a3a2a;
-      border-radius: 10px;
+      border: 4px solid #2a3a2a;
+      border-radius: 8px;
       image-rendering: pixelated;
-      image-rendering: crisp-edges;
       display: block;
     }
-    .mode-switches {
+    .footer-text {
+      margin-top: 10px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+      letter-spacing: 3px;
+    }
+    .mode-buttons {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 15px;
+      align-items: center;
     }
     .mode-btn {
-      padding: 8px 12px;
-      font-size: 10px;
+      width: 80px;
+      height: 35px;
+      background: #2e7d32;
+      border: 2px solid #1b5e20;
+      border-radius: 20px;
+      color: white;
+      font-size: 12px;
       font-weight: bold;
       text-transform: uppercase;
-      background: linear-gradient(145deg, #e8e8f0 0%, #c0c0c8 100%);
-      border: 2px solid #5a5a6a;
-      border-radius: 10px;
       cursor: pointer;
-      box-shadow: 
-        0 3px 6px rgba(0,0,0,0.3),
-        inset 0 1px 0 rgba(255,255,255,0.6);
-      transition: all 0.1s;
-      letter-spacing: 0.5px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+      transition: all 0.1s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .mode-btn:active {
       transform: translateY(2px);
-      box-shadow: 
-        0 1px 3px rgba(0,0,0,0.3),
-        inset 0 1px 2px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
     }
     .mode-btn.active {
-      background: linear-gradient(145deg, #a0d0a0, #70a070);
-      color: white;
+      background: #1b5e20;
     }
-    .footer {
-      text-align: center;
-      margin-top: 12px;
-      font-size: 14px;
+    .brand-logo {
+      position: absolute;
+      top: 30px;
+      left: 40px;
+      font-size: 22px;
       font-weight: bold;
-      color: #2a2a3a;
-      text-shadow: 0 1px 2px rgba(255,255,255,0.3);
-      letter-spacing: 4px;
+      color: #333;
     }
-    .info-bar {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-top: 12px;
-      padding: 0 30px;
-    }
-    .info-item {
-      background: linear-gradient(180deg, #e0e4e0, #c0c4c0);
-      border: 2px solid #4a5a4a;
-      border-radius: 8px;
-      padding: 6px;
-      text-align: center;
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
-    }
-    .info-label {
-      font-size: 9px;
-      color: #2a3a2a;
-      font-weight: bold;
-      letter-spacing: 1px;
-    }
-    .info-value {
-      font-size: 14px;
-      color: #1a2a1a;
-      font-weight: bold;
-      letter-spacing: 2px;
-      margin-top: 2px;
-    }
-    .lives-dots {
-      display: flex;
-      gap: 4px;
-      justify-content: center;
-      margin-top: 2px;
-    }
-    .life-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      border: 2px solid #3a4a3a;
-      background: transparent;
-    }
-    .life-dot.filled { background: #2a3a2a; }
-    
-    @media (max-width: 800px) {
-      .main-area {
-        grid-template-columns: 80px 1fr 80px;
-        gap: 10px;
-      }
-      .round-btn {
-        width: 45px;
-        height: 45px;
-      }
-      .title {
-        font-size: 16px;
-      }
-      .info-bar {
-        padding: 0 10px;
-      }
-    }
-    @media (max-width: 600px) {
-      .console {
-        padding: 15px 20px;
-      }
-      .main-area {
+    .hidden-state { display: none; }
+
+    @media (max-width: 768px) {
+      .console-inner {
         grid-template-columns: 1fr;
-        gap: 15px;
+        gap: 25px;
       }
-      .left-controls {
-        order: 2;
+      .left-controls, .right-controls {
         flex-direction: row;
         justify-content: space-around;
         width: 100%;
       }
-      .right-controls {
-        order: 3;
-        flex-direction: row;
-        justify-content: space-around;
-        width: 100%;
+      .left-controls { order: 2; }
+      .right-controls { order: 3; }
+      .screen-area { order: 1; }
+      .brand-logo {
+        position: static;
+        text-align: center;
+        margin-bottom: 15px;
       }
-      .screen-container {
-        order: 1;
-      }
-    }
-    
-    /* Hidden DOM elements for game state sync */
-    .hidden-state {
-      display: none !important;
     }
   </style>
 </head>
 <body>
   <div class="console">
-    <div class="title">DOG &amp; EGGS</div>
-    
-    <div class="main-area">
+    <div class="brand-logo">IM</div>
+    <div class="console-inner">
       <div class="left-controls">
-        <div class="round-btn" data-action="start"></div>
-        <div class="round-btn" data-action="reset"></div>
+        <div class="control-pad">
+          <div class="round-btn" data-action="LT"></div>
+          <div class="round-btn" data-action="LB"></div>
+        </div>
       </div>
       
-      <div class="screen-container">
-        <canvas id="game" width="400" height="300"></canvas>
+      <div class="screen-area">
+        <div class="header-text" data-i18n="nuPogodi">НУ, ПОГОДИ!</div>
+        <div class="screen-container">
+          <canvas id="game" width="972" height="500"></canvas>
+        </div>
+        <div class="footer-text" data-i18n="elektronika">ЭЛЕКТРОНИКА</div>
       </div>
       
       <div class="right-controls">
-        <div class="mode-switches">
-          <button class="mode-btn active" data-action="gameA">GAME A</button>
-          <button class="mode-btn" data-action="gameB">GAME B</button>
-          <button class="mode-btn" data-action="language">LANG</button>
+        <div class="mode-buttons">
+          <button class="mode-btn" data-action="gameA" data-i18n="gameA">Game A</button>
+          <button class="mode-btn" data-action="gameB" data-i18n="gameB">Game B</button>
+          <button class="mode-btn" data-action="start" data-i18n="start">Start</button>
+          <button class="mode-btn" data-action="restart" data-i18n="reset">Restart</button>
+          <button class="mode-btn" data-action="screen">Screen</button>
+          <button class="mode-btn" data-action="mute">♪</button>
         </div>
-        <div class="round-btn" style="margin-top: 10px;"></div>
-      </div>
-    </div>
-    
-    <div class="info-bar">
-      <div class="info-item">
-        <div class="info-label">SCORE</div>
-        <div class="info-value" id="scoreDisplay">000</div>
-      </div>
-      <div class="info-item">
-        <div class="info-label">LIVES</div>
-        <div class="lives-dots">
-          <span class="life-dot filled" data-index="0"></span>
-          <span class="life-dot filled" data-index="1"></span>
-          <span class="life-dot filled" data-index="2"></span>
+        <div class="control-pad">
+          <div class="round-btn" data-action="RT"></div>
+          <div class="round-btn" data-action="RB"></div>
         </div>
       </div>
-      <div class="info-item">
-        <div class="info-label">BEST</div>
-        <div class="info-value" id="bestDisplay">000</div>
-      </div>
     </div>
-    
-    <div class="footer">ELEKTRONIKA</div>
-    
-    <!-- Hidden elements for game state synchronization -->
+
+    <!-- Hidden elements for game state and compatibility -->
     <div class="hidden-state">
+      <div id="scoreDisplay">000</div>
+      <div id="bestDisplay">000</div>
+      <div id="modeDisplay">Game A</div>
       <div class="miss-dot filled" data-index="0"></div>
       <div class="miss-dot filled" data-index="1"></div>
       <div class="miss-dot filled" data-index="2"></div>
-      <span id="modeDisplay">Game A</span>
-      
-      <!-- Hidden panel for main.js compatibility -->
       <div class="panel">
         <button data-action="gameA" data-i18n="gameA">Game A</button>
         <button data-action="gameB" data-i18n="gameB">Game B</button>
         <button data-action="start" data-i18n="start">Start</button>
         <button data-action="reset" data-i18n="reset">Reset</button>
         <button data-action="language" data-i18n="language">Language</button>
+        <button data-action="screen">Screen</button>
       </div>
-      
-      <!-- Hidden i18n elements -->
       <span data-i18n="title">Dog & Eggs</span>
-      <span data-i18n="scoreLabel">Score</span>
-      <span data-i18n="bestLabel">Best</span>
-      <span data-i18n="missesLabel">Lives</span>
-      <span data-i18n="modeLabel">Mode</span>
-      <span data-i18n="modeA">Game A</span>
-      <span data-i18n="modeB">Game B</span>
-      <span data-i18n="hintControls">Controls</span>
-      <span data-i18n="paused">Paused</span>
-      <span data-i18n="pressStart">Press Start</span>
-      <span data-i18n="gameOver">Game Over</span>
-      <span data-i18n="newRecord">New Record!</span>
     </div>
   </div>
   
   <script type="module" src="./main.js"></script>
-  
   <script>
-    // Keyboard controls
-    document.addEventListener('keydown', (e) => {
-      const keyMap = {
-        'ArrowLeft': () => movePlayer('left'),
-        'ArrowRight': () => movePlayer('right'),
-        'ArrowUp': () => movePlayer('up'),
-        'ArrowDown': () => movePlayer('down'),
-        ' ': () => document.querySelector('[data-action="start"]').click(),
-        'Enter': () => document.querySelector('[data-action="start"]').click()
-      };
-      
-      if (keyMap[e.key]) {
-        e.preventDefault();
-        keyMap[e.key]();
-      }
-    });
-    
-    function movePlayer(direction) {
-      const event = new KeyboardEvent('keydown', {
-        key: `Arrow${direction.charAt(0).toUpperCase() + direction.slice(1)}`,
-        code: `Arrow${direction.charAt(0).toUpperCase() + direction.slice(1)}`,
-        bubbles: true
-      });
-      window.dispatchEvent(event);
-    }
-    
-    // Button handlers
-    const buttons = document.querySelectorAll('[data-action]');
-    const modeBtns = document.querySelectorAll('.mode-btn');
-    
-    buttons.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const action = btn.dataset.action;
-        
-        // Visual feedback
-        btn.style.transform = 'translateY(3px)';
-        setTimeout(() => {
-          btn.style.transform = '';
-        }, 150);
-        
-        // Trigger corresponding panel button click
-        const panelBtn = document.querySelector(`.panel button[data-action="${action}"]`);
-        if (panelBtn) {
-          panelBtn.click();
-        }
-      });
-    });
-    
-    // Mode button active state
-    modeBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        if (btn.dataset.action === 'gameA' || btn.dataset.action === 'gameB') {
-          modeBtns.forEach(b => {
-            if (b.dataset.action === 'gameA' || b.dataset.action === 'gameB') {
-              b.classList.remove('active');
-            }
-          });
-          btn.classList.add('active');
-        }
-      });
-    });
-    
-    // Lives sync
-    const lifeDots = document.querySelectorAll('.life-dot');
-    const missDots = document.querySelectorAll('.miss-dot');
-    
-    const observer = new MutationObserver(() => {
-      lifeDots.forEach((dot, i) => {
-        if (missDots[i]) {
-          dot.classList.toggle('filled', missDots[i].classList.contains('filled'));
-        }
-      });
-    });
-    
-    missDots.forEach(dot => {
-      observer.observe(dot, { attributes: true, attributeFilter: ['class'] });
-    });
+    // This script is intentionally left blank as all event handling is now managed within main.js
   </script>
 </body>
 </html>
